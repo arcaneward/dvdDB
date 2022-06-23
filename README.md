@@ -1,2 +1,2 @@
 # dvdDB
-DVD rental database transformations
+DVD rental database queries
