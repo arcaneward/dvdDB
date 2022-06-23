@@ -1,4 +1,4 @@
-‹B. This section demonstrates the code that creates tables to hold the reports.
+--This section demonstrates the code that creates tables to hold the reports.
  
 CREATE TABLE actor_payment (
 payment_id int,
@@ -13,7 +13,7 @@ sum_amount numeric(10,2),
 PRIMARY KEY (actor_id)
 );
  
-C. The SQL query that extracts the raw data required for the detailed table of the business report is shown in this section. By making sure the column and row data types match by performing the query below, one may confirm the accuracy of the data. There shouldn't be any empty or invalid cells.
+--The SQL query that extracts the raw data required for the detailed table of the business report is shown in this section. By making sure the column and row data types match by performing the query below, one may confirm the accuracy of the data. There shouldn't be any empty or invalid cells.
  
 INSERT INTO actor_payment
 SELECT payment.payment_id, actor.actor_id, payment.amount
@@ -25,7 +25,7 @@ INNER JOIN rental ON inventory.inventory_id = rental.inventory_id
 INNER JOIN payment ON rental.rental_id = payment.rental_id;
 SELECT * FROM actor_payment;
  
-D. The code for the function that does the transformation shown in part A4 is demonstrated in this section. The sum of all payments made to each actor in the detail table will be contained in the total_amount function.
+--The code for the function that does the transformation is demonstrated in this section. The sum of all payments made to each actor in the detail table will be contained in the total_amount function.
  
 CREATE FUNCTION total_payments(a_id int)
 RETURNS numeric(10,2)
@@ -41,7 +41,7 @@ WHERE actor_id = a_id;
 return payments_sum;
 END;$func$;
  
-E. The SQL code used in this part to build a trigger on the report's detailed table, which updates the summary table as new raw data is uploaded, is shown.
+--The SQL code used in this part to build a trigger on the report's detailed table, which updates the summary table as new raw data is uploaded, is shown.
  
 CREATE FUNCTION update_actor_total()
 RETURNS TRIGGER
@@ -59,10 +59,8 @@ ON actor_payment
 FOR EACH STATEMENT
 EXECUTE PROCEDURE update_actor_total();
  
-F. This section demonstrates a stored procedure is used to refresh data in both the summary and detailed tables. It clears the data of the summary and detailed tables and performs the ETL load process from section C. 
- 
-1. 1. It is advised that the stored procedure be called by creating a trigger to do so every month or every thirty days. This can be done with the use of a Windows scheduler, and it would guarantee that the data is current so that the company can make informed promotional selections.
- 
+--This section demonstrates a stored procedure is used to refresh data in both the summary and detailed tables. It clears the data of the summary and detailed tables and performs the ETL load process from section C. 
+
 CREATE PROCEDURE refresh_all()
 LANGUAGE plpgsql
 AS $$
