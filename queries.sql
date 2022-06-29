@@ -46,13 +46,13 @@ END;$func$;
 CREATE FUNCTION update_actor_total()
 RETURNS TRIGGER
 LANGUAGE plpgsql
-AS $$
+AS $func$
 BEGIN
 INSERT INTO actor_payment_total
 SELECT actor_id, actor_full_name(actor_id) AS actor_name, sum_rental_payments(actor_id) AS sum_amount
 FROM actor;
 RETURN NEW;
-END;$$;3
+END;$func$;3
 CREATE TRIGGER new_trigger
 AFTER INSERT
 ON actor_payment
@@ -63,7 +63,7 @@ EXECUTE PROCEDURE update_actor_total();
 
 CREATE PROCEDURE refresh_all()
 LANGUAGE plpgsql
-AS $$
+AS $func$
 BEGIN
 DELETE FROM actor_payment;
 DELETE FROM actor_payment_total;
@@ -75,7 +75,7 @@ INNER JOIN film ON film.film_id = film_actor.film_id
 INNER JOIN inventory ON film_actor.film_id = inventory.film_id
 INNER JOIN rental ON inventory.inventory_id = rental.inventory_id
 INNER JOIN payment ON rental.rental_id = payment.rental_id;
-END;$$;
+END;$func$;
 
 CALL refresh_all();
 SELECT * FROM summary;
